@@ -1,0 +1,26 @@
+
+class Employee:
+    
+    def __init__(self, name, position):
+        self.name = name
+        self.position = position
+    
+    def employee_info(self):
+        return f"{self.name} = {self.position}"
+    
+    # Convert static method to instance method
+    def is_valid_position(self):
+        current_available = ["Manager", "Cashier", "CEO"]
+        if self.position in current_available:
+            return f"{self.name} has a valid position: {self.position}"
+        else:
+            return f"{self.name} has an invalid position: {self.position}"
+
+employee1 = Employee("Divansh", "CEO")
+employee2 = Employee("Rohit", "Manager")
+employee3 = Employee("Ravi", "Employee")
+
+# Now calling the method will print name and validity
+print(employee1.is_valid_position())  # Output: Divansh has a valid position: CEO
+print(employee2.is_valid_position())  # Output: Rohit has a valid position: Manager
+print(employee3.is_valid_position())  # Output: Ravi has an invalid position: Employee
