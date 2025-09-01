@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GourmetAI - Premium Restaurant Experience</title>
+    <style>
+         :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --dark: #292f36;
+            --light: #f7fff7;
+            --accent: #ff9f1c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        /* Auth Container */
+        
+        .auth-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 8s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+        
+        .auth-left h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        .auth-left p {
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.6;
+            z-index: 1;
+        }
+        
+        .auth-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: white;
+        }
+        
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #3dbeb6;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+        
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .auth-toggle a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+        
+        .otp-container {
+            display: none;
+        }
+        
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .otp-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+        
+        .resend-otp {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .resend-otp a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .resend-otp a:hover {
+            text-decoration: underline;
+        }
+        /* Main App */
+        
+        .app-container {
+            display: none;
+            min-height: 100vh;
+        }
+        /* Header */
+        
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            width: 200px;
+            display: none;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .user-dropdown a:hover {
+            color: var(--primary);
+        }
+        /* Hero Section */
+        
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .hero-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: fadeInUp 1s ease 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .hero-btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Features Section */
+        
+        .features {
+            padding: 5rem 2rem;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--dark);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+        /* Menu Section */
+        
+        .menu {
+            padding: 5rem 2rem;
+            background-color: #f9f9f9;
+        }
+        
+        .menu-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .menu-tab {
+            padding: 0.8rem 1.5rem;
+            background-color: white;
+            border: none;
+            border-radius: 30px;
+            margin: 0 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .menu-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .menu-tab:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .menu-item-content {
+            padding: 1.5rem;
+        }
+        
+        .menu-item-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .menu-item-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .menu-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-item-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .add-to-cart {
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #3dbeb6;
+        }
+        /* AI Recommendation Section */
+        
+        .ai-recommendation {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+        
+        .ai-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .ai-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-desc {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+        
+        .ai-form {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .ai-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .ai-form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+        
+        .ai-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .ai-result {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            color: var(--dark);
+            text-align: left;
+            display: none;
+            width: 100%;
+        }
+        
+        .ai-result-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .ai-result-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        /* Reservation Section */
+        
+        .reservation {
+            padding: 5rem 2rem;
+            background-color: white;
+        }
+        
+        .reservation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .reservation-form {
+            background-color: var(--light);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -1rem;
+        }
+        
+        .form-col {
+            flex: 1;
+            min-width: 250px;
+            padding: 0 1rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Footer */
+        
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Cart Modal */
+        
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .cart-modal.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        
+        .close-cart:hover {
+            color: var(--primary);
+        }
+        
+        .cart-items {
+            padding: 1.5rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            margin: 0 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.2rem;
+        }
+        
+        .remove-item {
+            margin-left: auto;
+            color: #ff6b6b;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .cart-total {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .total-label {
+            font-weight: 600;
+        }
+        
+        .total-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .cart-icon {
+            position: relative;
+            margin-left: 2rem;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--primary);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        /* Overlay */
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+            .auth-left,
+            .auth-right {
+                flex: none;
+                height: auto;
+            }
+            .auth-left {
+                padding: 3rem 2rem;
+            }
+            .auth-left h1 {
+                font-size: 2.5rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .cart-modal {
+                width: 100%;
+                right: -100%;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+            .form-col {
+                padding: 0;
+            }
+        }
+        /* Animations */
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Authentication Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-left">
+            <h1>Welcome to GourmetAI</h1>
+            <p>Experience the future of dining with our AI-powered restaurant. Personalized recommendations, seamless ordering, and unforgettable flavors await you.</p>
+        </div>
+        <div class="auth-right">
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <h2 class="form-title">Login to Your Account</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password">
+                </div>
+                <button class="btn" id="loginBtn">Login</button>
+                <div class="auth-toggle">
+                    <p>Don't have an account? <a id="showRegister">Register</a></p>
+                    <p>or <a id="showOtpLogin">Login with OTP</a></p>
+                </div>
+            </div>
+
+            <!-- OTP Login Form -->
+            <div class="auth-form otp-container" id="otpLoginForm">
+                <h2 class="form-title">Login with OTP</h2>
+                <div class="form-group">
+                    <label for="otpEmail">Email or Phone</label>
+                    <input type="text" id="otpEmail" class="form-control" placeholder="Enter your email or phone">
+                </div>
+                <button class="btn" id="sendOtpBtn">Send OTP</button>
+                <div class="otp-inputs" id="otpInputs" style="display: none;">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                    <input type="text" class="otp-input" maxlength="1" pattern="\d">
+                </div>
+                <button class="btn" id="verifyOtpBtn" style="display: none; margin-top: 1rem;">Verify OTP</button>
+                <div class="resend-otp">
+                    <a id="resendOtp" style="display: none;">Resend OTP</a>
+                </div>
+                <div class="auth-toggle">
+                    <p>Prefer password? <a id="showPasswordLogin">Login with password</a></p>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm" style="display: none;">
+                <h2 class="form-title">Create Account</h2>
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-control" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Phone Number</label>
+                    <input type="tel" id="registerPhone" class="form-control" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" class="form-control" placeholder="Confirm your password">
+                </div>
+                <button class="btn" id="registerBtn">Register</button>
+                <div class="auth-toggle">
+                    <p>Already have an account? <a id="showLogin">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <a href="#" class="logo">Gourmet<span>AI</span></a>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#ai-recommendation">AI Chef</a></li>
+                    <li><a href="#reservation">Reservations</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-dropdown">
+                        <a href="#profile">My Profile</a>
+                        <a href="#orders">My Orders</a>
+                        <a href="#settings">Settings</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+                <div class="cart-icon" id="cartIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <div class="cart-count" id="cartCount">0</div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>AI-Curated Culinary Excellence</h1>
+                <p>Our intelligent system learns your preferences to deliver perfectly personalized dining experiences every time you visit.</p>
+                <a href="#menu" class="hero-btn">Explore Menu</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <h2 class="section-title">Why Choose GourmetAI</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">AI Personalization</h3>
+                    <p class="feature-desc">Our system learns your taste preferences and dietary needs to recommend perfect dishes every time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3 class="feature-title">Instant Service</h3>
+                    <p class="feature-desc">Smart ordering system reduces wait times and ensures your food arrives at the perfect temperature.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3 class="feature-title">Sustainable Dining</h3>
+                    <p class="feature-desc">AI-optimized inventory reduces waste while maintaining the freshest ingredients for your meals.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section class="menu" id="menu">
+            <h2 class="section-title">Our AI-Enhanced Menu</h2>
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-category="all">All Items</button>
+                <button class="menu-tab" data-category="starters">Starters</button>
+                <button class="menu-tab" data-category="mains">Main Courses</button>
+                <button class="menu-tab" data-category="desserts">Desserts</button>
+                <button class="menu-tab" data-category="drinks">Drinks</button>
+            </div>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- AI Recommendation Section -->
+        <section class="ai-recommendation" id="ai-recommendation">
+            <div class="ai-container">
+                <h2 class="ai-title">AI Chef Recommendation</h2>
+                <p class="ai-desc">Tell us about your preferences and dietary needs, and our AI chef will create a personalized menu just for you.</p>
+                <div class="ai-form">
+                    <div class="ai-form-group">
+                        <label for="ai-cuisine">Preferred Cuisine</label>
+                        <select id="ai-cuisine" class="ai-form-control">
+                            <option value="">Any</option>
+                            <option value="italian">Italian</option>
+                            <option value="indian">Indian</option>
+                            <option value="mexican">Mexican</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="american">American</option>
+                        </select>
+                    </div>
+                    <div class="ai-form-group">
+                        <label for="ai-diet">Dietary Restrictions</label>
+                        <select id="ai-diet" class="ai-form-control">
+                            <option value="">None</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="gluten-free">Gluten-Free</option>
+                            <option value="keto">Keto</option>
+                            <option value="halal">Halal</option>
+                        </select>
+                    </div>
+                    <div class="ai-form-group">
+                        <label for="ai-spice">Spice Level</label>
+                        <select id="ai-spice" class="ai-form-control">
+                            <option value="mild">Mild</option>
+                            <option value="medium">Medium</option>
+                            <option value="hot">Hot</option>
+                            <option value="extra-hot">Extra Hot</option>
+                        </select>
+                    </div>
+                    <div class="ai-form-group">
+                        <label for="ai-allergies">Allergies (comma separated)</label>
+                        <input type="text" id="ai-allergies" class="ai-form-control" placeholder="e.g., peanuts, shellfish">
+                    </div>
+                    <button class="btn ai-btn" id="ai-recommend-btn">Get Recommendations</button>
+                    <div class="ai-result" id="ai-result">
+                        <h3 class="ai-result-title">Your Personalized Recommendations</h3>
+                        <div id="ai-result-content">
+                            <!-- AI recommendations will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservation Section -->
+        <section class="reservation" id="reservation">
+            <h2 class="section-title">Make a Reservation</h2>
+            <div class="reservation-container">
+                <form class="reservation-form" id="reservationForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-name">Full Name</label>
+                                <input type="text" id="res-name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-email">Email</label>
+                                <input type="email" id="res-email" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-phone">Phone Number</label>
+                                <input type="tel" id="res-phone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-guests">Number of Guests</label>
+                                <select id="res-guests" class="form-control" required>
+                                    <option value="1">1 Person</option>
+                                    <option value="2">2 People</option>
+                                    <option value="3">3 People</option>
+                                    <option value="4">4 People</option>
+                                    <option value="5">5 People</option>
+                                    <option value="6">6 People</option>
+                                    <option value="7">7+ People</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-date">Date</label>
+                                <input type="date" id="res-date" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="res-time">Time</label>
+                                <select id="res-time" class="form-control" required>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="11:30">11:30 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="12:30">12:30 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="13:30">1:30 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                    <option value="17:30">5:30 PM</option>
+                                    <option value="18:00">6:00 PM</option>
+                                    <option value="18:30">6:30 PM</option>
+                                    <option value="19:00">7:00 PM</option>
+                                    <option value="19:30">7:30 PM</option>
+                                    <option value="20:00">8:00 PM</option>
+                                    <option value="20:30">8:30 PM</option>
+                                    <option value="21:00">9:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-notes">Special Requests</label>
+                        <textarea id="res-notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Book Table</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>GourmetAI</h3>
+                    <p>Revolutionizing dining through artificial intelligence and culinary excellence.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">f</a>
+                        <a href="#" class="social-link">in</a>
+                        <a href="#" class="social-link">ig</a>
+                        <a href="#" class="social-link">tw</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#ai-recommendation">AI Chef</a></li>
+                        <li><a href="#reservation">Reservations</a></li>
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">123 AI Avenue, Tech City</a></li>
+                        <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                        <li><a href="mailto:info@gourmetai.com">info@gourmetai.com</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Opening Hours</h3>
+                    <ul class="footer-links">
+                        <li>Monday - Friday: 11AM - 10PM</li>
+                        <li>Saturday: 10AM - 11PM</li>
+                        <li>Sunday: 10AM - 9PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 GourmetAI. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </footer>
+
+        <!-- Cart Modal -->
+        <div class="cart-modal" id="cartModal">
+            <div class="cart-header">
+                <h3 class="cart-title">Your Order</h3>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+            <div class="cart-total">
+                <div class="total-row">
+                    <span class="total-label">Subtotal:</span>
+                    <span class="total-amount" id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Tax (10%):</span>
+                    <span class="total-amount" id="cartTax">$0.00</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount" id="cartTotal">$0.00</span>
+                </div>
+                <button class="btn checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const appContainer = document.getElementById('appContainer');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const otpLoginForm = document.getElementById('otpLoginForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const showOtpLogin = document.getElementById('showOtpLogin');
+        const showPasswordLogin = document.getElementById('showPasswordLogin');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendOtp = document.getElementById('resendOtp');
+        const otpInputs = document.getElementById('otpInputs');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userAvatar = document.getElementById('userAvatar');
+        const cartIcon = document.getElementById('cartIcon');
+        const cartModal = document.getElementById('cartModal');
+        const closeCart = document.getElementById('closeCart');
+        const overlay = document.getElementById('overlay');
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTax = document.getElementById('cartTax');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const menuGrid = document.getElementById('menuGrid');
+        const menuTabs = document.querySelectorAll('.menu-tab');
+        const aiRecommendBtn = document.getElementById('ai-recommend-btn');
+        const aiResult = document.getElementById('ai-result');
+        const aiResultContent = document.getElementById('ai-result-content');
+        const reservationForm = document.getElementById('reservationForm');
+
+        // Sample menu data
+        const menuData = [{
+            id: 1,
+            name: "Truffle Arancini",
+            description: "Crispy risotto balls infused with black truffle and mozzarella, served with truffle aioli.",
+            price: 12.99,
+            category: "starters",
+            image: "https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 2,
+            name: "AI-Crafted Sushi Platter",
+            description: "Chef's selection of 12 pieces and 6 rolls, personalized based on your previous preferences.",
+            price: 28.99,
+            category: "mains",
+            image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 3,
+            name: "Molecular Gastronomy Dessert",
+            description: "Deconstructed cheesecake with berry caviar, edible foam, and liquid nitrogen ice cream.",
+            price: 14.99,
+            category: "desserts",
+            image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 4,
+            name: "Signature AI Cocktail",
+            description: "Algorithmically mixed drink that adapts to your taste profile with each visit.",
+            price: 15.99,
+            category: "drinks",
+            image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 5,
+            name: "Farm-to-Table Salad",
+            description: "Seasonal greens with AI-optimized dressing pairing, roasted nuts, and artisanal cheese.",
+            price: 11.99,
+            category: "starters",
+            image: "https://images.unsplash.com/photo-1546793665-c74683f339c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 6,
+            name: "Smart Sous Vide Steak",
+            description: "Perfectly cooked ribeye with AI-determined optimal temperature and timing, served with seasonal sides.",
+            price: 32.99,
+            category: "mains",
+            image: "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 7,
+            name: "Chocolate Neural Network",
+            description: "Multi-layered chocolate dessert with AI-patterned design and personalized flavor nodes.",
+            price: 13.99,
+            category: "desserts",
+            image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }, {
+            id: 8,
+            name: "Wine Pairing Flight",
+            description: "Algorithmically selected wine samples based on your meal choices and personal taste profile.",
+            price: 24.99,
+            category: "drinks",
+            image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+        }];
+
+        // Cart data
+        let cart = [];
+
+        // User data
+        let currentUser = null;
+
+        // Initialize the app
+        function init() {
+            loadMenuItems();
+            setupEventListeners();
+        }
+
+        // Load menu items
+        function loadMenuItems(category = 'all') {
+            menuGrid.innerHTML = '';
+
+            const filteredItems = category === 'all' ?
+                menuData :
+                menuData.filter(item => item.category === category);
+
+            filteredItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.dataset.id = item.id;
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="menu-item-img">
+                    <div class="menu-item-content">
+                        <h3 class="menu-item-title">${item.name}</h3>
+                        <p class="menu-item-desc">${item.description}</p>
+                        <div class="menu-item-footer">
+                            <span class="menu-item-price">$${item.price.toFixed(2)}</span>
+                            <button class="add-to-cart" data-id="${item.id}">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                menuGrid.appendChild(menuItem);
+            });
+
+            // Add event listeners to add-to-cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = parseInt(e.target.dataset.id);
+                    addToCart(itemId);
+                });
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Auth toggle
+            showRegister.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                otpLoginForm.style.display = 'none';
+            });
+
+            showLogin.addEventListener('click', () => {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                otpLoginForm.style.display = 'none';
+            });
+
+            showOtpLogin.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'none';
+                otpLoginForm.style.display = 'block';
+            });
+
+            showPasswordLogin.addEventListener('click', () => {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                otpLoginForm.style.display = 'none';
+            });
+
+            // Login/Register buttons
+            loginBtn.addEventListener('click', handleLogin);
+            registerBtn.addEventListener('click', handleRegister);
+            sendOtpBtn.addEventListener('click', sendOtp);
+            verifyOtpBtn.addEventListener('click', verifyOtp);
+            resendOtp.addEventListener('click', sendOtp);
+
+            // OTP input handling
+            const otpFields = document.querySelectorAll('.otp-input');
+            otpFields.forEach((field, index) => {
+                field.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1) {
+                        if (index < otpFields.length - 1) {
+                            otpFields[index + 1].focus();
+                        } else {
+                            otpFields[index].blur();
+                        }
+                    }
+                });
+
+                field.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
+                        otpFields[index - 1].focus();
+                    }
+                });
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', handleLogout);
+
+            // Menu tabs
+            menuTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    menuTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    loadMenuItems(tab.dataset.category);
+                });
+            });
+
+            // Cart
+            cartIcon.addEventListener('click', openCart);
+            closeCart.addEventListener('click', closeCartModal);
+            overlay.addEventListener('click', closeCartModal);
+            checkoutBtn.addEventListener('click', handleCheckout);
+
+            // AI Recommendation
+            aiRecommendBtn.addEventListener('click', generateAiRecommendations);
+
+            // Reservation form
+            reservationForm.addEventListener('submit', handleReservation);
+
+            // Set min date for reservation to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('res-date').min = today;
+        }
+
+        // Handle login
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            // In a real app, this would be an API call
+            currentUser = {
+                name: email.split('@')[0],
+                email: email,
+                avatar: email.charAt(0).toUpperCase()
+            };
+
+            // Show app
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+
+            // Update user avatar
+            userAvatar.textContent = currentUser.avatar;
+        }
+
+        // Handle register
+        function handleRegister() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            // In a real app, this would be an API call
+            currentUser = {
+                name: name,
+                email: email,
+                phone: phone,
+                avatar: name.charAt(0).toUpperCase()
+            };
+
+            // Show app
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+
+            // Update user avatar
+            userAvatar.textContent = currentUser.avatar;
+
+            // Show success message
+            alert('Registration successful! Welcome to GourmetAI.');
+        }
+
+        // Send OTP
+        function sendOtp() {
+            const emailOrPhone = document.getElementById('otpEmail').value;
+
+            if (!emailOrPhone) {
+                alert('Please enter your email or phone number');
+                return;
+            }
+
+            // Simulate sending OTP
+            alert(`OTP sent to ${emailOrPhone}. In a real app, this would be sent via email/SMS.`);
+
+            // Show OTP input fields
+            otpInputs.style.display = 'flex';
+            verifyOtpBtn.style.display = 'block';
+            resendOtp.style.display = 'block';
+            sendOtpBtn.style.display = 'none';
+
+            // Focus first OTP field
+            document.querySelector('.otp-input').focus();
+        }
+
+        // Verify OTP
+        function verifyOtp() {
+            const otpFields = document.querySelectorAll('.otp-input');
+            let otp = '';
+
+            otpFields.forEach(field => {
+                otp += field.value;
+            });
+
+            if (otp.length !== 6) {
+                alert('Please enter a 6-digit OTP');
+                return;
+            }
+
+            // In a real app, this would verify with the server
+            // For demo, any 6-digit code works
+            const emailOrPhone = document.getElementById('otpEmail').value;
+
+            currentUser = {
+                name: emailOrPhone.split('@')[0] || 'User',
+                email: emailOrPhone.includes('@') ? emailOrPhone : '',
+                phone: !emailOrPhone.includes('@') ? emailOrPhone : '',
+                avatar: (emailOrPhone.split('@')[0] || 'User').charAt(0).toUpperCase()
+            };
+
+            // Show app
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+
+            // Update user avatar
+            userAvatar.textContent = currentUser.avatar;
+
+            // Clear OTP fields
+            otpFields.forEach(field => {
+                field.value = '';
+            });
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            authContainer.style.display = 'flex';
+            appContainer.style.display = 'none';
+
+            // Clear forms
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('otpEmail').value = '';
+            document.querySelectorAll('.otp-input').forEach(field => {
+                field.value = '';
+            });
+            otpInputs.style.display = 'none';
+            verifyOtpBtn.style.display = 'none';
+            resendOtp.style.display = 'none';
+            sendOtpBtn.style.display = 'block';
+        }
+
+        // Add to cart
+        function addToCart(itemId) {
+            const item = menuData.find(i => i.id === itemId);
+
+            if (!item) return;
+
+            const existingItem = cart.find(i => i.id === itemId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...item,
+                    quantity: 1
+                });
+            }
+
+            updateCart();
+
+            // Show cart briefly
+            openCart();
+            setTimeout(closeCartModal, 1500);
+        }
+
+        // Update cart
+        function updateCart() {
+            cartItems.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+                cartCount.textContent = '0';
+                cartSubtotal.textContent = '$0.00';
+                cartTax.textContent = '$0.00';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.name}</h4>
+                        <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                        <div class="cart-item-actions">
+                            <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
+                            <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                            <button class="remove-item" data-id="${item.id}">&times;</button>
+                        </div>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+
+            // Add event listeners to quantity buttons
+            document.querySelectorAll('.quantity-btn.minus').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = parseInt(e.target.dataset.id);
+                    updateCartItemQuantity(itemId, -1);
+                });
+            });
+
+            document.querySelectorAll('.quantity-btn.plus').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = parseInt(e.target.dataset.id);
+                    updateCartItemQuantity(itemId, 1);
+                });
+            });
+
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const itemId = parseInt(e.target.dataset.id);
+                    const newQuantity = parseInt(e.target.value);
+
+                    if (newQuantity < 1) {
+                        e.target.value = 1;
+                        return;
+                    }
+
+                    updateCartItemQuantity(itemId, 0, newQuantity);
+                });
+            });
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = parseInt(e.target.dataset.id);
+                    removeFromCart(itemId);
+                });
+            });
+
+            // Update totals
+            const tax = subtotal * 0.1;
+            const total = subtotal + tax;
+
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            cartTax.textContent = `$${tax.toFixed(2)}`;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Update cart item quantity
+        function updateCartItemQuantity(itemId, change, newQuantity = null) {
+            const item = cart.find(i => i.id === itemId);
+
+            if (!item) return;
+
+            if (newQuantity !== null) {
+                item.quantity = newQuantity;
+            } else {
+                item.quantity += change;
+            }
+
+            if (item.quantity < 1) {
+                removeFromCart(itemId);
+                return;
+            }
+
+            updateCart();
+        }
+
+        // Remove from cart
+        function removeFromCart(itemId) {
+            cart = cart.filter(i => i.id !== itemId);
+            updateCart();
+        }
+
+        // Open cart
+        function openCart() {
+            cartModal.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close cart modal
+        function closeCartModal() {
+            cartModal.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Handle checkout
+        function handleCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+
+            // In a real app, this would process payment
+            alert(`Order placed successfully! Total: ${cartTotal.textContent}`);
+
+            // Clear cart
+            cart = [];
+            updateCart();
+            closeCartModal();
+        }
+
+        // Generate AI recommendations
+        function generateAiRecommendations() {
+            const cuisine = document.getElementById('ai-cuisine').value;
+            const diet = document.getElementById('ai-diet').value;
+            const spice = document.getElementById('ai-spice').value;
+            const allergies = document.getElementById('ai-allergies').value;
+
+            // Simulate AI processing
+            setTimeout(() => {
+                let recommendations = [...menuData];
+
+                // Filter by cuisine
+                if (cuisine) {
+                    recommendations = recommendations.filter(item => {
+                        if (cuisine === 'italian') return item.name.includes('Truffle') || item.name.includes('Arancini');
+                        if (cuisine === 'japanese') return item.name.includes('Sushi');
+                        if (cuisine === 'american') return item.name.includes('Steak');
+                        return true;
+                    });
+                }
+
+                // Filter by diet
+                if (diet) {
+                    recommendations = recommendations.filter(item => {
+                        if (diet === 'vegetarian') return !item.name.includes('Steak');
+                        if (diet === 'vegan') return item.category === 'desserts' || item.name.includes('Salad');
+                        return true;
+                    });
+                }
+
+                // Show results
+                aiResultContent.innerHTML = '';
+
+                if (recommendations.length === 0) {
+                    aiResultContent.innerHTML = '<p>No recommendations found based on your criteria. Please try different preferences.</p>';
+                } else {
+                    recommendations.forEach(item => {
+                        const recItem = document.createElement('div');
+                        recItem.className = 'ai-result-item';
+                        recItem.innerHTML = `
+                            <h4>${item.name}</h4>
+                            <p>${item.description}</p>
+                            <p><strong>Price:</strong> $${item.price.toFixed(2)}</p>
+                            <button class="btn add-to-cart" data-id="${item.id}" style="padding: 5px 10px; font-size: 0.9rem; margin-top: 5px;">Add to Order</button>
+                        `;
+                        aiResultContent.appendChild(recItem);
+                    });
+
+                    // Add event listeners to add-to-cart buttons
+                    document.querySelectorAll('.ai-result-item .add-to-cart').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const itemId = parseInt(e.target.dataset.id);
+                            addToCart(itemId);
+                        });
+                    });
+                }
+
+                aiResult.style.display = 'block';
+            }, 1000);
+        }
+
+        // Handle reservation
+        function handleReservation(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('res-name').value;
+            const email = document.getElementById('res-email').value;
+            const phone = document.getElementById('res-phone').value;
+            const guests = document.getElementById('res-guests').value;
+            const date = document.getElementById('res-date').value;
+            const time = document.getElementById('res-time').value;
+            const notes = document.getElementById('res-notes').value;
+
+            // In a real app, this would send to the server
+            alert(`Reservation confirmed for ${guests} on ${date} at ${time}. Confirmation sent to ${email}`);
+
+            // Reset form
+            reservationForm.reset();
+
+            // Set min date for reservation to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('res-date').min = today;
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+
+</html>
